@@ -1,0 +1,7 @@
+# SPDX-License-Identifier: MIT
+---
+- name: Deploy game servers
+  hosts: games
+  roles:
+    - role: cfx_server
+      tags: ["cfx"]

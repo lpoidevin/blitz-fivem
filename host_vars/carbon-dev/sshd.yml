@@ -1,0 +1,8 @@
+# SPDX-License-Identifier: MIT
+---
+# SSH config to support vscode remote development
+sshd_global_config:
+  AddressFamily: any
+  PasswordAuthentication: "no"
+  # AllowStreamLocalForwarding: "yes"
+  AllowTcpForwarding: "yes"

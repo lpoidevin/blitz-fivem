@@ -1,0 +1,63 @@
+{{ ansible_managed | comment }}
+
+[Unit]
+Description=Cfx Server
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=exec
+User={{ cfx_server_user }}
+Group={{ cfx_server_group }}
+EnvironmentFile=/etc/default/cfx-server
+ExecStart={{ cfx_server_install_dir }}/current/run.sh
+
+Restart=on-failure
+RestartSec=5
+
+# Allows the server to open many files
+#LimitNOFILE=infinity
+{% if cfx_server_cpu_affinity is defined %}
+# List of CPU cores that the process is running on
+#CPUAffinity={{ cfx_server_cpu_affinity }}
+{% endif %}
+
+PrivateTmp=disconnected
+PrivateUsers=self
+PrivateDevices=true
+ProtectClock=true
+ProtectControlGroups=strict
+ProtectHome=true
+ProtectHostname=true
+ProtectKernelLogs=true
+ProtectKernelModules=true
+ProtectKernelTunables=true
+ProtectProc=invisible
+ProtectSystem=strict
+ProcSubset=pid
+
+{% if cfx_server_type == 'enhanced' %}
+ReadWritePaths={{ cfx_server_data_dir }}
+{% elif cfx_server_type == 'legacy' %}
+ReadWritePaths={{ cfx_server_install_dir }} {{ cfx_server_data_dir }}
+{% endif %}
+
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+RestrictNamespaces=true
+RestrictRealtime=true
+RestrictSUIDSGID=true
+
+RemoveIPC=true
+LockPersonality=true
+MemoryDenyWriteExecute=false
+NoNewPrivileges=true
+
+SystemCallArchitectures=native
+SystemCallFilter=@system-service
+SystemCallFilter=~@privileged
+
+# Returns an explicit permission error (EPERM) if a blocked syscall is attempted
+#SystemCallErrorNumber=EPERM
+
+[Install]
+WantedBy=multi-user.target

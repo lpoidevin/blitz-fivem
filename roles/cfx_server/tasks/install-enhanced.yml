@@ -1,0 +1,41 @@
+# SPDX-License-Identifier: MIT
+---
+- name: Fetch latest build from cfx depot
+  ansible.builtin.uri:
+    url: "{{ _cfx_server_depot_url }}"
+    return_content: true
+  register: _cfx_server_depot_response
+  check_mode: false
+
+- name: Extract commit SHA and construct the download URL
+  ansible.builtin.set_fact:
+    _cfx_server_artifact_build: "{{ _cfx_server_depot_response.json.build }}"
+    _cfx_server_artifact_url: "{{ _cfx_server_depot_response.json.content_files.1.download_url }}"
+    _cfx_server_artifact_sha256: "{{ _cfx_server_depot_response.json.content_files.1.hash_sha256 }}"
+
+- name: Create artifact directory
+  ansible.builtin.file:
+    path: "{{ cfx_server_install_dir }}/{{ _cfx_server_artifact_build }}"
+    state: directory
+    mode: "0755"
+
+- name: Download the artifact
+  ansible.builtin.get_url:
+    url: "{{ _cfx_server_artifact_url }}"
+    dest: /tmp/cfx-server.tar.xz
+    checksum: "sha256:{{ _cfx_server_artifact_sha256 }}"
+    mode: "0644"
+
+- name: Extract the artifact
+  ansible.builtin.unarchive:
+    src: /tmp/cfx-server.tar.xz
+    dest: "{{ cfx_server_install_dir }}/{{ _cfx_server_artifact_build }}"
+    remote_src: true
+    creates: "{{ cfx_server_install_dir }}/{{ _cfx_server_artifact_build }}/run.sh"
+
+- name: Create symlink to the current artifact version
+  ansible.builtin.file:
+    src: "{{ cfx_server_install_dir }}/{{ _cfx_server_artifact_build }}"
+    dest: "{{ cfx_server_install_dir }}/current"
+    state: link
+  notify: Restart cfx-server

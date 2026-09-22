@@ -1,0 +1,15 @@
+# SPDX-License-Identifier: MIT
+---
+- name: Reload systemd
+  ansible.builtin.systemd_service:
+    daemon_reload: true
+
+- name: Restart cfx-server
+  ansible.builtin.systemd_service:
+    name: cfx-server.service
+    state: restarted
+
+- name: Reload nftables
+  ansible.builtin.systemd_service:
+    name: nftables.service
+    state: reloaded

@@ -1,0 +1,16 @@
+# SPDX-License-Identifier: MIT
+---
+mariadb_databases:
+  - name: "{{ cfx_server_db_name }}"
+    collation: utf8mb4_unicode_ci
+    encoding: utf8mb4
+    state: present
+
+mariadb_users:
+  - name: "{{ cfx_server_db_user }}"
+    host: localhost
+    plugin: unix_socket
+    priv: "{{ cfx_server_db_name }}.*:ALL"
+
+mariadb_pam_enable: true
+mariadb_pam_users: "{{ vault_mariadb_pam_users }}"

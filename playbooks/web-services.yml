@@ -1,0 +1,13 @@
+# SPDX-License-Identifier: MIT
+---
+- name: Setup reverse proxy
+  hosts: games
+  roles:
+    - role: nginx_proxy
+      tags: ["nginx", "proxy"]
+
+# - name: Setup certificates via ACME
+#   hosts: game
+#   roles:
+#     - role: lego
+#       tags: ["lego"]

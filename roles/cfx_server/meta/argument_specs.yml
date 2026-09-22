@@ -1,0 +1,79 @@
+# SPDX-License-Identifier: MIT
+---
+argument_specs:
+  main:
+    short_description: Deploy and manage Cfx Server
+    options:
+      cfx_server_type:
+        type: str
+        choices: ["enhanced", "legacy"]
+        required: true
+        description: Type of server to install between Cfx Server and FXServer
+      cfx_server_build_number:
+        type: str
+        required: true
+        description: The Cfx Server/FXServer build number to install
+      cfx_server_txadmin_endpoint:
+        type: str
+        required: true
+        description: The public endpoint for txAdmin (e.g., txadmin.example.com)
+
+      # Service configuration
+      cfx_server_user:
+        type: str
+        default: citizenfx
+      cfx_server_group:
+        type: str
+        default: citizenfx
+      cfx_server_home_dir:
+        type: str
+        default: /var/opt/cfx
+      cfx_server_sftp_chrooted:
+        type: bool
+        default: false
+        description: Specify whether the home directory is configured to support chrooted SFTP
+      cfx_server_sftp_keys:
+        type: list
+        elements: str
+        default: []
+        description: List of SSH public keys for SFTP access
+
+      # Installation configuration
+      cfx_server_install_dir:
+        type: str
+        default: /opt/cfx
+        description: Artifacts installation directory
+      cfx_server_data_dir:
+        type: str
+        default: "{{ cfx_server_home_dir }}/txData"
+        description: The path to the data folder, which contains the txAdmin logs, configs, and data
+      cfx_server_data_dir_mode:
+        type: str
+        default: "0750"
+        description: Specify the permissions applied to the data folder
+
+      # Database defaults provisioning
+      cfx_server_db_host:
+        type: str
+        default: localhost
+      cfx_server_db_port:
+        type: int
+        default: 3306
+      cfx_server_db_user:
+        type: str
+        default: citizenfx
+      cfx_server_db_pass:
+        type: str
+      cfx_server_db_name:
+        type: str
+
+      # Meta information
+      cfx_server_provider_name:
+        type: str
+        default: "DefaultHosting"
+      cfx_server_provider_logo:
+        type: str
+        description: URL to the provider banner/logo
+      cfx_server_account:
+        type: str
+        description: txAdmin initial account

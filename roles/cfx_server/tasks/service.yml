@@ -1,0 +1,24 @@
+# SPDX-License-Identifier: MIT
+---
+- name: Deploy cfx-server service
+  ansible.builtin.template:
+    src: cfx-server.service.j2
+    dest: /etc/systemd/system/cfx-server.service
+    mode: "0644"
+  notify:
+    - Reload systemd
+    - Restart cfx-server
+
+- name: Deploy cfx-server env file
+  ansible.builtin.template:
+    src: cfx-server.env.j2
+    dest: /etc/default/cfx-server
+    owner: "{{ cfx_server_user }}"
+    group: "{{ cfx_server_group }}"
+    mode: "0640"
+  notify: Restart cfx-server
+
+- name: Enable cfx-server service
+  ansible.builtin.systemd_service:
+    name: cfx-server.service
+    enabled: true

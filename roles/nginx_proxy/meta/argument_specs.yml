@@ -1,0 +1,32 @@
+# SPDX-License-Identifier: MIT
+---
+argument_specs:
+  main:
+    short_description: Deploy reverse proxy vhosts
+    options:
+      # TLS Settings
+      # nginx_proxy_enable_http3:
+      #   type: bool
+      #   default: false
+      #   description: Enable HTTP/3 Alt-Svc headers.
+      # nginx_proxy_enable_hsts:
+      #   type: bool
+      #   default: false
+      #   description: Enable Strict-Transport-Security headers.
+      nginx_proxy_tls_cert_path:
+        type: str
+        required: true
+        description: Path to the TLS certificate file.
+      nginx_proxy_tls_key_path:
+        type: str
+        required: true
+        description: Path to the TLS key file.
+
+      # txAdmin vhost
+      nginx_proxy_txadmin_fqdn:
+        type: str
+        required: true
+        description: The FQDN for the server_name
+      nginx_proxy_txadmin_port:
+        type: str
+        description: The internal port to proxy to

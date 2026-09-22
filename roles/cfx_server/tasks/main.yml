@@ -1,0 +1,67 @@
+# SPDX-License-Identifier: MIT
+---
+- name: Ensure group exists
+  ansible.builtin.group:
+    name: "{{ cfx_server_group }}"
+    system: true
+    state: present
+
+- name: Create the system account
+  ansible.builtin.user:
+    name: "{{ cfx_server_user }}"
+    group: "{{ cfx_server_group }}"
+    system: true
+    home: "{{ cfx_server_home_dir }}"
+    shell: /usr/sbin/nologin
+    state: present
+
+- name: Ensure home directory exists with correct perms
+  ansible.builtin.file:
+    path: "{{ cfx_server_home_dir }}"
+    state: directory
+    owner: "{{ cfx_server_sftp_chrooted | ternary('root', cfx_server_user) }}"
+    group: "{{ cfx_server_sftp_chrooted | ternary('root', cfx_server_group) }}"
+    mode: "0755"
+
+- name: Deploy public SSH key for SFTP access
+  ansible.posix.authorized_key:
+    user: "{{ cfx_server_user }}"
+    state: present
+    key: "{{ item }}"
+  loop: "{{ cfx_server_sftp_keys }}"
+
+- name: Create data folder owned by the service user
+  ansible.builtin.file:
+    path: "{{ cfx_server_data_dir }}"
+    state: directory
+    owner: "{{ cfx_server_user }}"
+    group: "{{ cfx_server_group }}"
+    mode: "{{ cfx_server_data_dir_mode }}"
+
+- name: Ensure install directory exists
+  ansible.builtin.file:
+    path: "{{ cfx_server_install_dir }}"
+    state: directory
+    mode: "0755"
+
+- name: Setup cfx-server
+  ansible.builtin.import_tasks: install-enhanced.yml
+  when: cfx_server_type == 'enhanced'
+
+- name: Setup fxserver
+  ansible.builtin.import_tasks: install-legacy.yml
+  when: cfx_server_type == 'legacy'
+
+- name: Deploy systemd service
+  ansible.builtin.import_tasks: service.yml
+
+- name: Deploy firewall rules
+  ansible.builtin.copy:
+    content: |
+      tcp dport 30120 accept \
+      comment "Accept game server traffic"
+      udp dport 30120 accept \
+      comment "Accept game server traffic"
+    dest: /etc/nftables.d/filter-input/cfx-server.nft
+    mode: "0644"
+  notify: Reload nftables

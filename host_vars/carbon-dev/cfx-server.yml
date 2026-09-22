@@ -1,0 +1,17 @@
+# SPDX-License-Identifier: MIT
+---
+# Install
+cfx_server_type: legacy
+cfx_server_build_number: 35245
+
+# Cfx Server to support multi-user developemnt on a server
+cfx_server_data_dir_mode: "2770"
+
+# txAdmin config
+cfx_server_txadmin_endpoint: txadmin.dev.carbon.coursepoursuite.fr
+cfx_server_account: Carbonaraaaaa:16402109
+
+# Database
+cfx_server_db_name: fivem
+cfx_server_db_user: citizenfx
+cfx_server_db_pass: unix(/run/mysqld/mysqld.sock)

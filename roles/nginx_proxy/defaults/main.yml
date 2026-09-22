@@ -1,0 +1,8 @@
+# SPDX-License-Identifier: MIT
+---
+# TLS
+# nginx_proxy_enable_http3: false
+# nginx_proxy_enable_hsts: false
+
+# txAdmin vhost
+nginx_proxy_txadmin_port: 40120

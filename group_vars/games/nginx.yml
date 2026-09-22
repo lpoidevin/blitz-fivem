@@ -1,0 +1,7 @@
+# SPDX-License-Identifier: MIT
+---
+# Proxy config (until ACME client is deployed)
+nginx_proxy_tls_cert_path: /etc/ssl/certs/ssl-cert-snakeoil.pem
+nginx_proxy_tls_key_path: /etc/ssl/private/ssl-cert-snakeoil.key
+
+nginx_proxy_txadmin_fqdn: "{{ cfx_server_txadmin_endpoint }}"

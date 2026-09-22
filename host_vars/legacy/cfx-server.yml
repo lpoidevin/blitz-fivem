@@ -1,0 +1,18 @@
+# SPDX-License-Identifier: MIT
+---
+# Install
+cfx_server_type: legacy
+cfx_server_build_number: 35245
+
+# Service user
+cfx_server_sftp_chrooted: true
+cfx_server_sftp_keys: "{{ vault_cfx_server_sftp_keys }}"
+
+# txAdmin config
+cfx_server_txadmin_endpoint: txadmin.legacy.coursepoursuite.fr
+cfx_server_account: Carbonaraaaaa:16402109
+
+# Database
+cfx_server_db_name: fivem
+cfx_server_db_user: citizenfx
+cfx_server_db_pass: unix(/run/mysqld/mysqld.sock)

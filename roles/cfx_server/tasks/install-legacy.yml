@@ -1,0 +1,36 @@
+# SPDX-License-Identifier: MIT
+---
+- name: Fetch the commit data for the build tag from GitHub API
+  ansible.builtin.uri:
+    url: "{{ _cfx_server_github_base }}{{ cfx_server_build_number }}"
+    return_content: true
+    headers:
+      Accept: "application/vnd.github.v3+json"
+  register: _cfx_server_github_api_response
+  check_mode: false
+
+- name: Extract commit SHA and construct the download URL
+  ansible.builtin.set_fact:
+    _cfx_server_artifact_url: "{{ _cfx_server_artifacts_base }}{{ cfx_server_build_number }}-{{ _cfx_server_github_api_response.json.sha }}/fx.tar.xz"
+
+- name: Create artifact directory
+  ansible.builtin.file:
+    path: "{{ cfx_server_install_dir }}/{{ cfx_server_build_number }}"
+    state: directory
+    mode: "0755"
+
+- name: Download and extract the artifact directly to the server
+  ansible.builtin.unarchive:
+    src: "{{ _cfx_server_artifact_url }}"
+    dest: "{{ cfx_server_install_dir }}/{{ cfx_server_build_number }}"
+    owner: "{{ cfx_server_user }}"
+    group: "{{ cfx_server_group }}"
+    remote_src: true
+    creates: "{{ cfx_server_install_dir }}/{{ cfx_server_build_number }}/run.sh"
+
+- name: Create symlink to the current artifact version
+  ansible.builtin.file:
+    src: "{{ cfx_server_install_dir }}/{{ cfx_server_build_number }}"
+    dest: "{{ cfx_server_install_dir }}/current"
+    state: link
+  notify: Restart cfx-server

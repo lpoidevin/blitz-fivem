@@ -1,0 +1,6 @@
+# SPDX-License-Identifier: MIT
+---
+# Ansible connection via incus
+ansible_connection: community.general.incus
+ansible_incus_project: blitz
+ansible_incus_remote: game.blitz-infra.net
