@@ -1,11 +1,7 @@
 # SPDX-License-Identifier: MIT
 ---
 # OVH network
-dns_servers:
-  - 213.186.33.99
-  - 2001:41d0:3:163::1
-ntp_servers:
-  - ntp0.ovh.net
+dns_servers: ["2001:41d0:3:163::1"]
 
 # Timezone
 common_timezone: Europe/Paris

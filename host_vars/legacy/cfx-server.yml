@@ -13,6 +13,7 @@ cfx_server_txadmin_endpoint: txadmin.legacy.coursepoursuite.fr
 cfx_server_account: Carbonaraaaaa:16402109
 
 # Database
-cfx_server_db_name: fivem
-cfx_server_db_user: citizenfx
-cfx_server_db_pass: unix(/run/mysqld/mysqld.sock)
+cfx_server_db_host: db.coursepoursuite.fr
+cfx_server_db_name: fivem_legacy
+cfx_server_db_user: cfx_legacy
+cfx_server_db_pass: "{{ vault_cfx_server_db_pass }}"

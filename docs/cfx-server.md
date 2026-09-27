@@ -4,7 +4,8 @@
 
 ```
 # Database connection
-set mysql_connection_string "mysql://citizenfx@unix(/run/mysqld/mysqld.sock)/fivem"
+#set mysql_connection_string "mysql://citizenfx@unix(/run/mysqld/mysqld.sock)/fivem"
+set mysql_connection_string "mysql://citizenfx:12345@db.coursepoursuite.fr:3306/fivem"
 set mysql_ui false
 set mysql_debug false
 
@@ -22,7 +23,7 @@ set sv_endpoints "endpoint.dev.coursepoursuite.fr"
 # Define the file servers configuration
 set sv_httpFileServerProxyOnly true
 # Add all proxy addresses (connection proxy and cache servers)
-set sv_proxyIPRanges "::1/128 2001:41d0:20a:900::629/128 2001:41d0:20a:900::614/128 92.222.230.74/32 92.222.197.110/32"
+set sv_proxyIPRanges "::1/128 2001:db8::629/128 2001:db8::614/128"
 set adhesive_cdnKey "SomeLongRandomSecretString"
 fileserver_add ".*" "https://cache.dev.coursepoursuite.fr"
 ```
@@ -44,8 +45,8 @@ Edit profile config in `txData/<profile>/config.json`.
     "fxserver": {
       "compress": "gzip", // compress rotated files
       "interval": "1d",
-      "maxFiles": 7, //max number of rotated files to keep
-      "maxSize": "5G" //max size of rotated files to keep
+      "maxFiles": 7, // max number of rotated files to keep
+      "maxSize": "5G" // max size of rotated files to keep
     },
     "admin": {
       "compress": "gzip",
@@ -68,9 +69,31 @@ Edit profile config in `txData/<profile>/config.json`.
 
 - create user account on the system
 - provision default password to change on first use
+
+```bash
+passwd -e username
+```
+
 - deploy SSH key
+
+```bash
+mkdir .ssh
+vim .ssh/authorized_keys
+chmod 700 .ssh
+chown -R username: .ssh
+```
+
 - add user to `citizenfx` group
+
+```bash
+usermod -aG citizenfx username
+```
+
 - create a symbolic link in home directory to the data directory (`/var/opt/cfx/txData`)
+
+```bash
+ln -s /var/opt/cfx/txData txData
+```
 
 ## Deployment access
 

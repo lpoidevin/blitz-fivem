@@ -2,11 +2,13 @@
 ---
 common_network_interfaces:
   - name: eth0
-    ipv6_address: "2001:41d0:c:67:1::199/128"
+    ipv4_address: "54.36.26.12/32"
+    ipv6_address: "2001:41d0:c:67:1::dead/64"
     dns: "{{ dns_servers }}"
     routes:
       - dest: "0.0.0.0/0"
-        gw: "169.254.0.1"
+        gw: "37.187.248.254"
         onlink: true
       - dest: "::/0"
-        gw: "fe80::1"
+        gw: "2001:41d0:c:ff:ff:ff:ff:ff"
+        onlink: true

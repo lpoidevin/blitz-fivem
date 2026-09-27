@@ -2,6 +2,7 @@
 ---
 - name: Deploy game servers
   hosts: games
+  gather_facts: false
   roles:
     - role: cfx_server
       tags: ["cfx"]

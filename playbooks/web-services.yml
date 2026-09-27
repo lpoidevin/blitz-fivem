@@ -2,12 +2,14 @@
 ---
 - name: Setup reverse proxy
   hosts: games
+  gather_facts: false
   roles:
     - role: nginx_proxy
       tags: ["nginx", "proxy"]
 
-# - name: Setup certificates via ACME
-#   hosts: game
-#   roles:
-#     - role: lego
-#       tags: ["lego"]
+- name: Setup certificates via ACME
+  hosts: games
+  gather_facts: false
+  roles:
+    - role: lego
+      tags: ["lego"]

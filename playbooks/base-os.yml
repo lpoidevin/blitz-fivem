@@ -2,6 +2,7 @@
 ---
 - name: Configure base operating system
   hosts: all
+  gather_facts: false
   roles:
     - role: common
       tags: ["common"]

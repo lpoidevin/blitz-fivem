@@ -21,6 +21,9 @@ argument_specs:
         type: str
         default: "/run/mysqld/mysqld.sock"
         description: The path to the Unix socket file.
+      mariadb_trusted_network:
+        type: str
+        description: IPv6 subnet allowed to connect to the MariaDB server.
 
       # Service Configuration
       mariadb_cpu_affinity:

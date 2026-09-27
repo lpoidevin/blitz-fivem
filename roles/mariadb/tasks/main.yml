@@ -46,11 +46,12 @@
 # - name: Setup database monitoring
 #   ansible.builtin.import_tasks: monitoring.yml
 
-# - name: Deploy firewall rule
-#   ansible.builtin.copy:
-#     content: |
-#       tcp dport {{ mariadb_port }} accept \
-#       comment "Accept mariadb access from VPN"
-#     dest: /etc/nftables.d/filter-input-wg/mariadb.nft
-#     mode: "0644"
-#   notify: Reload nftables
+- name: Deploy firewall rule
+  ansible.builtin.copy:
+    content: |
+      ip6 saddr {{ mariadb_trusted_network }} tcp dport {{ mariadb_port }} accept \
+      comment "Accept mariadb access from trusted network"
+    dest: /etc/nftables.d/filter-input-v6/mariadb.nft
+    mode: "0644"
+  notify: Reload nftables
+  when: mariadb_trusted_network is defined

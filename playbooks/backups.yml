@@ -2,6 +2,7 @@
 ---
 - name: Deploy backup agent
   hosts: backup
+  gather_facts: false
   roles:
     - role: restic
       tags: ["restic"]

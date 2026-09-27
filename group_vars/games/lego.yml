@@ -1,0 +1,25 @@
+# SPDX-License-Identifier: MIT
+---
+lego_version: "5.5.1"
+
+lego_accounts:
+  blitz-security:
+    server: https://acme-v02.api.letsencrypt.org/directory
+    email: security@blitz-infra.net
+    keyType: EC384
+    acceptsTermsOfService: true
+
+lego_challenges:
+  nginx-http:
+    http:
+      webroot: /var/www/html
+
+lego_certificates:
+  txadmin:
+    challenge: nginx-http
+    account: blitz-security
+    domains: ["{{ cfx_server_txadmin_endpoint }}"]
+
+lego_deploy_targets:
+  - name: txadmin
+    service_cmd: /usr/bin/systemctl reload nginx.service
