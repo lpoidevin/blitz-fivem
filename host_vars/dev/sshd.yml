@@ -3,5 +3,9 @@
 # SSH config to support vscode remote development
 sshd_global_config:
   AddressFamily: any
-  # AllowStreamLocalForwarding: "yes"
-  AllowTcpForwarding: "yes"
+
+sshd_match_blocks:
+  - condition: Group dev
+    rules:
+      AllowTcpForwarding: "yes"
+      AllowStreamLocalForwarding: "yes"
