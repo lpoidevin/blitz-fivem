@@ -4,17 +4,17 @@
   ansible.builtin.copy:
     dest: /etc/pam.d/mariadb
     content: |
-      auth    required pam_unix.so
-      account required pam_unix.so
+      auth    required pam_sss.so
+      account required pam_sss.so
     mode: "0644"
 
 - name: Install auth_pam plugin in MariaDB
-  ansible.mysql.mysql_query:
+  ansible.mariadb.mariadb_query:
     query: "INSTALL SONAME 'auth_pam';"
   failed_when: false
 
 - name: Ensure MySQL users are present
-  ansible.mysql.mysql_user:
+  ansible.mariadb.mariadb_user:
     name: "{{ item.name }}"
     host: "{{ item.host | default('localhost') }}"
     plugin: pam

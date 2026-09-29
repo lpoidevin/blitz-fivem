@@ -6,7 +6,7 @@
     state: present
 
 - name: Create restic mysqld database user
-  ansible.mysql.mysql_user:
+  ansible.mariadb.mariadb_user:
     name: "{{ restic_user }}"
     host: localhost
     plugin: unix_socket
