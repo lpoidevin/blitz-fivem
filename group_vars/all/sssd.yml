@@ -1,0 +1,11 @@
+# SPDX-License-Identifier: MIT
+---
+sssd_domain: blitz-fivem.net
+sssd_uri: ldaps://ldap.blitz-infra.net
+
+sssd_bind_dn: uid=sssd,ou=sysaccounts,dc=blitz-fivem,dc=fr
+sssd_bind_passwd: "{{ vault_sssd_bind_passwd }}"
+
+sssd_base_dn: dc=blitz-fivem,dc=fr?subtree?
+sssd_user_base: ou=people,dc=blitz-fivem,dc=fr?onelevel?
+sssd_group_base: ou=groups,dc=blitz-fivem,dc=fr?onelevel?
