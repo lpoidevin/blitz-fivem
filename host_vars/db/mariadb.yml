@@ -8,24 +8,20 @@ mariadb_databases:
     collation: utf8mb4_unicode_ci
     encoding: utf8mb4
     state: present
-  - name: fivem_carbon_dev
+  - name: fivem_dev
     collation: utf8mb4_unicode_ci
     encoding: utf8mb4
     state: present
 
 mariadb_users:
-  # - name: test
-  #   host: localhost
-  #   plugin: unix_socket
-  #   priv: test.*:ALL
   - name: cfx_legacy
     host: 2001:41d0:c:67:1::dead
     password: "{{ vault_cfx_legacy_pass }}"
     priv: "fivem_legacy.*:ALL"
-  - name: cfx_carbon_dev
-    host: 2001:41d0:c:67:1:100:0:1
-    password: "{{ vault_cfx_carbon_dev_pass }}"
-    priv: "fivem_carbon_dev.*:ALL"
+  - name: cfx_dev
+    host: 2001:41d0:c:67:1::cafe
+    password: "{{ vault_cfx_dev_pass }}"
+    priv: "fivem_dev.*:ALL"
 
 mariadb_pam_enable: true
 mariadb_pam_users: "{{ vault_mariadb_pam_users }}"

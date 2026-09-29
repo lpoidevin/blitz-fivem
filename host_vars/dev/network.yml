@@ -2,7 +2,7 @@
 ---
 common_network_interfaces:
   - name: eth0
-    ipv6_address: "2001:41d0:c:67:1:100:0:1/64"
+    ipv6_address: "2001:41d0:c:67:1::cafe/64"
     dns: "{{ dns_servers | ansible.utils.ipv6 }}"
     routes:
       - dest: "::/0"

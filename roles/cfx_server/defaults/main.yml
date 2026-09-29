@@ -10,7 +10,6 @@ cfx_server_sftp_keys: []
 # Directories
 cfx_server_install_dir: /opt/cfx
 cfx_server_data_dir: "{{ cfx_server_home_dir }}/txData"
-cfx_server_data_dir_mode: "0750"
 
 # Database defaults
 cfx_server_db_host: localhost

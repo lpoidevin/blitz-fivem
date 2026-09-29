@@ -47,10 +47,6 @@ argument_specs:
         type: str
         default: "{{ cfx_server_home_dir }}/txData"
         description: The path to the data folder, which contains the txAdmin logs, configs, and data
-      cfx_server_data_dir_mode:
-        type: str
-        default: "0750"
-        description: Specify the permissions applied to the data folder
 
       # Database defaults provisioning
       cfx_server_db_host:

@@ -8,7 +8,7 @@
       tags: ["common"]
     - role: nftables
       tags: ["nftables"]
-    - role: sssd
-      tags: ["sssd"]
     - role: sshd
       tags: ["sshd"]
+    - role: sssd
+      tags: ["sssd"]

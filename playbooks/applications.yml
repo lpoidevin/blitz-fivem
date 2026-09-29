@@ -6,3 +6,10 @@
   roles:
     - role: cfx_server
       tags: ["cfx"]
+
+- name: Deploy developement environement
+  hosts: dev
+  gather_facts: false
+  roles:
+    - role: bindfs
+      tags: ["bindfs"]

@@ -1,0 +1,7 @@
+# SPDX-License-Identifier: MIT-0
+---
+bindfs_path: /var/opt/cfx/txData
+bindfs_mountpoint: ~/txData
+bindfs_target_user: citizenfx
+bindfs_target_group: citizenfx
+bindfs_selected_group: dev

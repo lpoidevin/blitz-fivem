@@ -1,0 +1,14 @@
+# SPDX-License-Identifier: MIT-0
+---
+- name: Install packages
+  ansible.builtin.apt:
+    name:
+      - bindfs
+      - libpam-mount
+    state: present
+
+- name: Prepare pam mount
+  ansible.builtin.template:
+    src: pam_mount.conf.xml.j2
+    dest: /etc/security/pam_mount.conf.xml
+    mode: "0644"

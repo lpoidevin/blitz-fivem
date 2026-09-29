@@ -36,7 +36,7 @@
     state: directory
     owner: "{{ cfx_server_user }}"
     group: "{{ cfx_server_group }}"
-    mode: "{{ cfx_server_data_dir_mode }}"
+    mode: "0750"
 
 - name: Ensure install directory exists
   ansible.builtin.file:
