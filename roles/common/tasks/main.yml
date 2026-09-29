@@ -30,8 +30,27 @@
   community.general.timezone:
     name: "{{ common_timezone }}"
 
+- name: Ensure network packages are installed
+  ansible.builtin.apt:
+    name:
+      - systemd-resolved
+      # - systemd-timesyncd
+    state: present
+
+- name: Disable unused defaults in systemd-resolved
+  ansible.builtin.lineinfile:
+    path: /etc/systemd/resolved.conf
+    regexp: '^#?{{ item.key }}\b'
+    line: "{{ item.key }}={{ item.value }}"
+    firstmatch: true
+    state: present
+  loop:
+    - { key: LLMNR, value: "false" }
+  notify: Reload systemd-resolved
+
 - name: Setup network configuration
-  ansible.builtin.import_tasks: network.yml
+  ansible.builtin.import_tasks: networkd.yml
+  tags: ["networkd"]
 
 - name: Define report mail for unattended-upgrades
   ansible.builtin.lineinfile:

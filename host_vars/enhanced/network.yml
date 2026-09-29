@@ -3,10 +3,12 @@
 common_network_interfaces:
   - name: eth0
     ipv6_address: "2001:41d0:c:67:1:99:0:1/128"
-    dns: "{{ dns_servers }}"
+    dns: "{{ dns_servers | ansible.utils.ipv6 }}"
     routes:
       - dest: "::/0"
         gw: "2001:41d0:c:ff:ff:ff:ff:ff"
         onlink: true
-
-common_timezone: Asia/Tokyo
+  - name: eth1
+    dhcp4: true
+    ipv6_enabled: false
+    dns: "{{ dns_servers | ansible.utils.ipv4 }}"
