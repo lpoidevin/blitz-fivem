@@ -13,6 +13,9 @@ set mysql_debug false
 endpoint_add_tcp "[::]:30120"
 endpoint_add_udp "[::]:30120"
 
+# Add all proxy addresses (connection proxy and cache servers)
+set sv_proxyIPRanges "::1/128 2001:db8::629/128 2001:db8::614/128"
+
 # Define connect endpoints (listing to cfx servers)
 set sv_forceIndirectListing true
 set sv_listingHostOverride "connect.dev.coursepoursuite.fr"
@@ -22,8 +25,6 @@ set sv_endpoints "endpoint.dev.coursepoursuite.fr"
 
 # Define the file servers configuration
 set sv_httpFileServerProxyOnly true
-# Add all proxy addresses (connection proxy and cache servers)
-set sv_proxyIPRanges "::1/128 2001:db8::629/128 2001:db8::614/128"
 set adhesive_cdnKey "SomeLongRandomSecretString"
 fileserver_add ".*" "https://cache.dev.coursepoursuite.fr"
 ```
