@@ -1,20 +1,6 @@
 # SPDX-License-Identifier: MIT
 ---
-- name: Restart systemd-networkd
-  ansible.builtin.systemd_service:
-    name: systemd-networkd.service
-    state: restarted
-
 - name: Reload systemd-resolved
   ansible.builtin.systemd_service:
     name: systemd-resolved.service
     state: reloaded
-
-- name: Restart unattended-upgrades
-  ansible.builtin.systemd_service:
-    name: unattended-upgrades.service
-    state: restarted
-
-- name: Soft reboot
-  ansible.builtin.reboot:
-    reboot_command: /usr/bin/systemctl soft-reboot
