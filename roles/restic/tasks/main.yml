@@ -1,10 +1,8 @@
 # SPDX-License-Identifier: MIT
 ---
-- name: Install restic and rclone
+- name: Install restic
   ansible.builtin.apt:
-    name:
-      - restic
-      - rclone
+    name: restic
     state: present
 
 - name: Ensure group exists
@@ -22,7 +20,7 @@
     shell: /usr/sbin/nologin
     state: present
 
-- name: Create specialized directories
+- name: Create directories
   ansible.builtin.file:
     path: "{{ item }}"
     state: directory
@@ -33,34 +31,13 @@
     - "{{ restic_dump_dir }}"
     - "{{ restic_cache_dir }}"
 
-- name: Setup mariadb requirements
+- name: Setup MariaDB requirements
   ansible.builtin.import_tasks: mariadb.yml
   when: restic_mariadb_backup
 
 - name: Setup OpenLDAP requirements
   ansible.builtin.import_tasks: openldap.yml
   when: restic_openldap_backup
-
-- name: Create Rclone config directory
-  ansible.builtin.file:
-    path: "{{ restic_home }}/.config/rclone"
-    state: directory
-    owner: "{{ restic_user }}"
-    group: "{{ restic_user }}"
-    mode: "0700"
-
-- name: Obscure the FTP password using rclone on the remote server
-  ansible.builtin.command: "rclone obscure {{ restic_ovh_ftp_pass }}"
-  register: restic_obscured_password
-  changed_when: false
-
-- name: Configure Rclone for OVH FTP
-  ansible.builtin.template:
-    src: rclone.conf.j2
-    dest: "{{ restic_home }}/.config/rclone/rclone.conf"
-    owner: "{{ restic_user }}"
-    group: "{{ restic_group }}"
-    mode: "0600"
 
 - name: Deploy excludes file
   ansible.builtin.copy:
@@ -81,12 +58,31 @@
     - backup.sh
     - backup-check.sh
 
+- name: Check if encrypted credential exists
+  ansible.builtin.stat:
+    path: /etc/credstore.encrypted/restic
+  register: restic_cred_file
+
+- name: Generate and encrypt private key
+  when: not restic_cred_file.stat.exists
+  block:
+    - name: Encrypt private key with systemd-creds
+      community.general.systemd_creds_encrypt:
+        secret: "{{ restic_private_key.stdout }}"
+      register: restic_encrypted_creds
+
+    - name: Save encrypted credential
+      ansible.builtin.copy:
+        content: "{{ restic_encrypted_creds.value }}"
+        dest: /etc/credstore.encrypted/restic
+        owner: root
+        group: restic
+        mode: "0640"
+
 - name: Install systemd services for backup
   ansible.builtin.template:
     src: "{{ item }}.j2"
     dest: "/etc/systemd/system/{{ item }}"
-    owner: root
-    group: root
     mode: "0644"
   loop:
     - restic.service
@@ -103,7 +99,8 @@
     RESTIC_CACHE_DIR: "{{ restic_cache_dir }}"
     RESTIC_REPOSITORY: "{{ restic_repo_path }}"
     RESTIC_PASSWORD: "{{ restic_password }}"
-    RCLONE_CONFIG: "{{ restic_home }}/.config/rclone/rclone.conf"
+    AWS_ACCESS_KEY_ID: "{{ restic_password }}"
+    AWS_SECRET_ACCESS_KEY: "{{ restic_password }}"
 
 - name: Initialize Restic backup repository
   ansible.builtin.command: restic init
@@ -113,7 +110,8 @@
     RESTIC_CACHE_DIR: "{{ restic_cache_dir }}"
     RESTIC_REPOSITORY: "{{ restic_repo_path }}"
     RESTIC_PASSWORD: "{{ restic_password }}"
-    RCLONE_CONFIG: "{{ restic_home }}/.config/rclone/rclone.conf"
+    AWS_ACCESS_KEY_ID: "{{ restic_password }}"
+    AWS_SECRET_ACCESS_KEY: "{{ restic_password }}"
 
 - name: Ensure Restic cache directory is owned by the restic user
   ansible.builtin.file:
@@ -127,8 +125,6 @@
   ansible.builtin.copy:
     src: "{{ item }}"
     dest: "/etc/systemd/system/{{ item }}"
-    owner: root
-    group: root
     mode: "0644"
   loop:
     - restic.timer

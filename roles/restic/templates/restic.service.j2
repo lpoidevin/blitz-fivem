@@ -1,4 +1,4 @@
-{{ ansible_managed | comment }}
+{# SPDX-License-Identifier: MIT #}
 [Unit]
 Description=Restic backup task
 After=network-online.target
@@ -8,6 +8,7 @@ Wants=network-online.target
 Type=oneshot
 User={{ restic_user }}
 Group={{ restic_group }}
+LoadCredentialEncrypted=restic
 ExecStart=/usr/local/sbin/backup.sh
 
 AmbientCapabilities=CAP_DAC_READ_SEARCH

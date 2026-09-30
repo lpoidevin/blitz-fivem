@@ -1,12 +1,12 @@
 #!/usr/bin/bash
 # SPDX-License-Identifier: MIT
-{{ ansible_managed | comment }}
 
 export RESTIC_CACHE_DIR="{{ restic_cache_dir }}"
 export RESTIC_REPOSITORY="{{ restic_repo_path }}"
-export RESTIC_PASSWORD="{{ restic_password }}"
 
-export ADMIN_EMAIL="{{ restic_admin_email }}"
+export RESTIC_PASSWORD="{{ restic_password }}"
+export AWS_ACCESS_KEY_ID="{{ restic_password }}"
+export AWS_SECRET_ACCESS_KEY="{{ restic_password }}"
 
 info() { printf "\n%s %s\n\n" "$( date )" "$*" >&2; }
 trap 'echo $( date ) Maintenance interrupted >&2; exit 2' INT TERM
@@ -47,7 +47,7 @@ else
     info "${error_message}"
 
     # Send the email alert
-    echo "${error_message}" | mail -s "Backup Alert: $(hostname) Failed" "${ALERT_EMAIL}"
+    echo "${error_message}" | mail -s "Backup Alert: $(hostname) Failed" root
 fi
 
 exit ${global_exit}

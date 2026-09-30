@@ -13,7 +13,7 @@
     priv: "*.*:RELOAD, PROCESS, LOCK TABLES, BINLOG MONITOR"
     state: present
 
-- name: Create restic system user
+- name: Add restic user to the mysql group
   ansible.builtin.user:
     name: "{{ restic_user }}"
     groups: mysql
